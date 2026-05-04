@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://m1911"]
+
+[ext_resource type="Script" path="res://scripts/Weapon.gd" id="1"]
+
+[sub_resource type="BoxMesh" id="M1911_SlideMesh"]
+size = Vector3(0.12, 0.08, 0.35)
+
+[sub_resource type="StandardMaterial3D" id="M1911_SlideMat"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="M1911_FrameMesh"]
+size = Vector3(0.1, 0.12, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="M1911_FrameMat"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="M1911_MuzzleMat"]
+albedo_color = Color(1, 0.9, 0.5, 1)
+emission_enabled = true
+emission = Color(1, 0.9, 0.5, 1)
+
+[node name="M1911" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Frame" type="MeshInstance3D" parent="."]
+mesh = SubResource("M1911_FrameMesh")
+material_override = SubResource("M1911_FrameMat")
+
+[node name="Slide" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("M1911_SlideMesh")
+material_override = SubResource("M1911_SlideMat")
+
+[node name="Barrel" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.04, 0, 0, 0, 0.04, 0, 0, 0, 0.5, 0, 0, -0.35)
+mesh = SubResource("M1911_FrameMesh")
+material_override = SubResource("M1911_FrameMat")
+
+[node name="MuzzleFlash" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.3, 0, 0, -0.6)
+visible = false
+mesh = SubResource("M1911_FrameMesh")
+material_override = SubResource("M1911_MuzzleMat")
