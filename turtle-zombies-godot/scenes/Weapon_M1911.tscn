@@ -201,6 +201,8 @@ weapon_sway_reset_speed = 10.0
 slide_fire_movement = 0.9
 slide_reload_movement = 0.9
 hammer_return_time = 0.1
+slide_node_path = NodePath("Model/M1911/Mesh_0008/Slide")
+hammer_pivot_node_path = NodePath("Model/M1911/Mesh_0008/HammerPivot")
 
 [node name="Model" type="Node3D" parent="." unique_id=1649810600]
 

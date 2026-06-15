@@ -68,6 +68,10 @@ class_name Weapon
 @export var hammer_fire_time: float = 0.08
 @export var hammer_return_time: float = 0.15
 
+@export_group("Scene Node Paths (set these when duplicating the weapon scene per the header instructions)")
+@export var slide_node_path: NodePath
+@export var hammer_pivot_node_path: NodePath
+
 # =============================================================================
 # RUNTIME STATE
 # =============================================================================
@@ -128,12 +132,12 @@ func _ready() -> void:
 	if muzzle_flash:
 		muzzle_flash.visible = false
 	
-	# Auto-find the Slide node (works with current high-quality model)
-	slide = find_child("Slide", true, false)
+	# Find Slide and HammerPivot using explicit NodePaths first (set in the weapon scene).
+	# This is robust when duplicating Weapon_M1911.tscn for new weapons (see top of file).
+	if slide_node_path:
+		slide = get_node_or_null(slide_node_path)
 	if not slide:
-		slide = get_node_or_null("Model/M1911/Mesh_0008/Slide")
-	if not slide:
-		slide = get_node_or_null("1911/Mesh_0008/Slide")
+		slide = find_child("Slide", true, false)  # fallback for compatibility during transition
 	
 	if has_slide:
 		if slide:
@@ -144,9 +148,12 @@ func _ready() -> void:
 		# has_slide = false is intentional for some weapon types (see export)
 		pass
 	
-	# Find hammer pivot (only if this weapon has a hammer)
-	if has_hammer:
+	if hammer_pivot_node_path:
+		hammer_pivot = get_node_or_null(hammer_pivot_node_path)
+	if not hammer_pivot:
 		hammer_pivot = find_child("HammerPivot", true, false)
+	
+	if has_hammer:
 		if hammer_pivot:
 			hammer_pivot.rotation_degrees.x = hammer_cocked_rotation
 		else:
