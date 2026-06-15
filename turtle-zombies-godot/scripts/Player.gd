@@ -36,7 +36,10 @@ const HUD_STAMINA_UPDATE_INTERVAL = 0.15  # seconds
 # References
 @onready var weapon_holder: Node3D = $Camera3D/WeaponHolder
 @onready var weapon: Weapon = $Camera3D/WeaponHolder/M1911
-@onready var hud = get_node("/root/Main/HUD")
+
+# HUD reference is wired in the scene (Main.tscn -> Player instance).
+# This replaces the previous brittle absolute path get_node("/root/Main/HUD").
+@export var hud: Control
 
 # Future-proof: support for multiple weapons
 var current_weapon: Weapon = null
@@ -55,8 +58,12 @@ func _ready():
 	if weapon:
 		current_weapon = weapon
 		weapon.ammo_changed.connect(_on_weapon_ammo_changed)
+		weapon.owning_player = self   # Clean reference for bob/sway (avoids parent walking)
 		# Initial HUD update
 		_on_weapon_ammo_changed(weapon.current_ammo, weapon.reserve_ammo, weapon.weapon_name)
+	
+	if not hud:
+		push_warning("Player HUD reference not set (assign the HUD node to the exported 'Hud' property on the Player instance in Main.tscn)")
 
 func _input(event):
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:

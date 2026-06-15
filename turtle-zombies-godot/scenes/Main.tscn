@@ -147,6 +147,7 @@ shape = SubResource("Main_WallShape")
 
 [node name="Player" parent="." unique_id=1888445051 instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.68, 0)
+hud = NodePath("../HUD")
 
 [node name="HUD" type="Control" parent="." unique_id=522721540]
 layout_mode = 3

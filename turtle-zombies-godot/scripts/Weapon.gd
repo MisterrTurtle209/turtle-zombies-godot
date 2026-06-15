@@ -86,6 +86,10 @@ var slide: Node3D = null
 var slide_original_y: float = 0.0   # Stores the correct resting position of the slide
 var hammer_pivot: Node3D = null
 
+# Set by the owning Player in its _ready.
+# Replaces the previous fragile get_parent().get_parent().get_parent() walk.
+var owning_player: CharacterBody3D = null
+
 # =============================================================================
 # RECOIL SYSTEM
 # =============================================================================
@@ -311,13 +315,12 @@ func _update_weapon_bob_and_sway(delta: float):
 	if not main_camera:
 		return
 	
-	var player = get_parent().get_parent().get_parent()  # WeaponHolder → Camera3D → Player
-	if not player or not player is CharacterBody3D:
+	if not owning_player:
 		return
 	
-	var velocity = player.velocity
+	var velocity = owning_player.velocity
 	var speed = velocity.length()
-	var is_moving = speed > 0.5 and player.is_on_floor()
+	var is_moving = speed > 0.5 and owning_player.is_on_floor()
 	
 	# === BOBBING ===
 	var bob_offset = 0.0
