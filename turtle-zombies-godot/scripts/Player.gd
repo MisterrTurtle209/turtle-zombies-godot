@@ -59,11 +59,18 @@ func _ready():
 		current_weapon = weapon
 		weapon.ammo_changed.connect(_on_weapon_ammo_changed)
 		weapon.owning_player = self   # Clean reference for bob/sway (avoids parent walking)
-		# Initial HUD update
-		_on_weapon_ammo_changed(weapon.current_ammo, weapon.reserve_ammo, weapon.weapon_name)
 	
-	if not hud:
-		push_warning("Player HUD reference not set (assign the HUD node to the exported 'Hud' property on the Player instance in Main.tscn)")
+	# Robust HUD reference (fixes regression from export-only approach).
+	# Prefer the scene-set export, fall back to relative sibling so the counter always works.
+	if not is_instance_valid(hud):
+		hud = get_node_or_null("../HUD") as Control
+	
+	if not is_instance_valid(hud):
+		push_warning("Player HUD reference not set (assign the HUD node to the exported 'hud' property on the Player instance in Main.tscn)")
+	
+	# Initial ammo display (must happen after we guarantee we have a valid hud)
+	if weapon and is_instance_valid(hud):
+		_on_weapon_ammo_changed(weapon.current_ammo, weapon.reserve_ammo, weapon.weapon_name)
 
 func _input(event):
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:

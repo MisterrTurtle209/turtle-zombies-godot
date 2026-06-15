@@ -335,19 +335,43 @@ func _update_weapon_bob_and_sway(delta: float):
 		bob_time += delta * weapon_bob_speed
 		bob_offset = sin(bob_time) * weapon_bob_amount * clamp(speed / 3.5, 0.3, 1.0)
 	
-	# === SWAY (clean system - works with recoil) ===
-	# Target based on camera rotation
-	var target_sway_x = -main_camera.rotation.x * weapon_sway_amount * 2.2   # Up/Down
-	var target_sway_y = -main_camera.rotation.y * weapon_sway_amount * 1.6   # Left/Right
-	
-	# Lerp toward target (this is the "following" feel)
+	# === SWAY (revised for typical FPS behavior) ===
+	# The previous version applied look sway *only* as heavy rotation on the weapon node.
+	# Because the pistol model's origin is near the rear/grip, this made the barrel swing
+	# in an arc ("on a bearing") when pitching the camera up/down.
+	#
+	# Typical FPS sway uses:
+	#   - Primary *translational* offset (the whole gun drifts in your view as you look around).
+	#   - A much smaller amount of rotational "inertia/weight" for polish.
+	# This feels more natural and keeps the muzzle from pivoting unnaturally.
+
+	var target_sway_x = -main_camera.rotation.x * weapon_sway_amount * 2.2   # Pitch (up/down)
+	var target_sway_y = -main_camera.rotation.y * weapon_sway_amount * 1.6   # Yaw (left/right)
+
+	# Lerp toward target (the "gun lags behind your view" inertia)
 	sway_offset.x = lerp(sway_offset.x, target_sway_x, delta * weapon_sway_speed)
 	sway_offset.y = lerp(sway_offset.y, target_sway_y, delta * weapon_sway_speed)
-	
-	# Apply additive (doesn't fight with recoil)
-	position = original_weapon_position + Vector3(0, bob_offset, 0)
-	rotation_degrees.x = original_weapon_rotation.x + sway_offset.x * 50
-	rotation_degrees.y = original_weapon_rotation.y + sway_offset.y * 45
+
+	# --- Translational sway (main effect for natural FPS look) ---
+	# The weapon shifts in local space so it "floats" relative to the camera when you turn your head.
+	var look_sway_pos = Vector3(
+		sway_offset.y * 35.0,   # Horizontal drift from yaw
+		sway_offset.x * 28.0,   # Vertical drift from pitch
+		0.0
+	)
+
+	# --- Small rotational sway (adds "weight" without the hinge/pivot feel) ---
+	# Multipliers are deliberately much lower than the old *50/*45.
+	var look_sway_rot = Vector3(
+		sway_offset.x * 10.0,
+		sway_offset.y * 8.0,
+		0.0
+	)
+
+	# Apply (bob is vertical only; look sway is now mostly translation)
+	position = original_weapon_position + Vector3(0, bob_offset, 0) + look_sway_pos
+	rotation_degrees.x = original_weapon_rotation.x + look_sway_rot.x
+	rotation_degrees.y = original_weapon_rotation.y + look_sway_rot.y
 
 
 # =============================================================================
