@@ -1,7 +1,8 @@
 extends Node3D
 
+# GameManager is the single source of truth for pause state and menu.
+# Player.gd no longer contains any pause toggle logic (centralized here to avoid duplication).
 @onready var pause_menu = get_node_or_null("HUD/PauseMenu")
-@onready var player = get_node_or_null("Player")
 
 func _ready():
     if pause_menu:

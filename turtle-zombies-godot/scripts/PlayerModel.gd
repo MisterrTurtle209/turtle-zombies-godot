@@ -1,6 +1,12 @@
 extends Node3D
 class_name PlayerModel
 
+# Currently unused (the game is strictly first-person).
+# This was prepared for a potential visible player body / arms
+# (e.g. third-person death cam, future multiplayer, or low-ready weapon pose).
+# The update_animation() method and exported positions exist but are never called from Player.
+# Left in place for future use rather than deleting history.
+
 @onready var torso: MeshInstance3D = $Torso
 @onready var head: MeshInstance3D = $Head
 @onready var left_arm: MeshInstance3D = $LeftArm

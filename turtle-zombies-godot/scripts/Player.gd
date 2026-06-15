@@ -68,6 +68,9 @@ func _input(event):
 		camera.rotation.x = pitch
 
 func _physics_process(delta):
+	if get_tree().paused:
+		return
+	
 	handle_input(delta)
 	handle_movement(delta)
 	handle_stamina(delta)
@@ -81,6 +84,9 @@ func _physics_process(delta):
 			hud.update_stamina(stamina, is_sprinting or sprint_exhausted)
 
 func handle_input(_delta):
+	if get_tree().paused:
+		return
+	
 	# Sprint
 	if Input.is_action_pressed("sprint") and stamina > 5 and not sprint_exhausted:
 		is_sprinting = true
@@ -90,13 +96,8 @@ func handle_input(_delta):
 	# Crouch
 	is_crouching = Input.is_action_pressed("crouch")
 	
-	# Pause
-	if Input.is_action_just_pressed("pause"):
-		get_tree().paused = not get_tree().paused
-		if get_tree().paused:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		else:
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	# Note: Pause is now fully owned by GameManager (single source of truth).
+	# Player no longer toggles pause or mouse mode directly. This eliminates duplication.
 
 func handle_movement(_delta):
 	var input_dir = Vector2.ZERO
