@@ -1,0 +1,24 @@
+# Godot 4
+.godot/
+.import/
+*.import
+
+# Build outputs (executables, exports)
+*.exe
+*.pck
+*.zip
+build/
+exports/
+TurtleZomb*
+
+# IDE
+.vscode/
+.idea/
+.vs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

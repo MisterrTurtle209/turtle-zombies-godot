@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://main"]
+[gd_scene format=3 uid="uid://main"]
 
-[ext_resource type="Script" path="res://scripts/GameManager.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/Barricade.tscn" id="3"]
-[ext_resource type="Script" path="res://scripts/HUD.gd" id="4"]
+[ext_resource type="Script" uid="uid://b8ik0w46pyncn" path="res://scripts/GameManager.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://player" path="res://scenes/Player.tscn" id="2"]
+[ext_resource type="Script" uid="uid://cd7kanti4qe5a" path="res://scripts/HUD.gd" id="4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Main_SkyMaterial"]
 sky_top_color = Color(0.1, 0.1, 0.15, 1)
@@ -19,23 +18,30 @@ sky = SubResource("Main_Sky")
 ambient_light_color = Color(0.3, 0.25, 0.2, 1)
 ambient_light_energy = 0.4
 
-[sub_resource type="BoxMesh" id="Main_FloorMesh"]
-size = Vector3(18, 0.2, 18)
-
 [sub_resource type="StandardMaterial3D" id="Main_FloorMat"]
 albedo_color = Color(0.25, 0.22, 0.2, 1)
 
-[sub_resource type="BoxMesh" id="Main_WallMesh"]
-size = Vector3(0.8, 7.0, 18)
+[sub_resource type="BoxMesh" id="Main_FloorMesh"]
+size = Vector3(18, 0.2, 18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0bbpv"]
+size = Vector3(17.20935, 0.6143799, 17.22583)
 
 [sub_resource type="StandardMaterial3D" id="Main_WallMat"]
 albedo_color = Color(0.3, 0.28, 0.25, 1)
 
+[sub_resource type="BoxMesh" id="Main_WallMesh"]
+size = Vector3(0.8, 7, 18)
+
 [sub_resource type="BoxShape3D" id="Main_WallShape"]
 size = Vector3(0.8, 7, 18)
 
-[sub_resource type="LabelSettings" id="Main_LabelSettings"]
+[sub_resource type="LabelSettings" id="Main_LabelSettings_Health"]
 font_size = 24
+font_color = Color(1, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="Main_LabelSettings_Points"]
+font_size = 20
 font_color = Color(1, 0.84, 0, 1)
 
 [sub_resource type="LabelSettings" id="Main_LabelSettings_Ammo"]
@@ -46,95 +52,103 @@ font_color = Color(1, 0.84, 0, 1)
 font_size = 18
 font_color = Color(1, 0.8, 0.4, 1)
 
-[node name="Main" type="Node3D"]
+[sub_resource type="LabelSettings" id="Main_LabelSettings_Round"]
+font_size = 36
+font_color = Color(1, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="Main_LabelSettings_LowAmmo"]
+font_size = 28
+font_color = Color(1, 1, 0, 1)
+
+[sub_resource type="LabelSettings" id="Main_LabelSettings_Warning"]
+font_size = 28
+font_color = Color(1, 0, 0, 1)
+
+[node name="Main" type="Node3D" unique_id=1185638075]
 script = ExtResource("1")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1965377813]
 environment = SubResource("Main_Environment")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2065504968]
 transform = Transform3D(0.866025, -0.433013, 0.25, 0.5, 0.75, -0.433013, 0, 0.5, 0.866025, 0, 0, 0)
-light_energy = 0.6
+light_energy = 0.711
 shadow_enabled = true
 
-[node name="OmniLight1" type="OmniLight3D" parent="."]
+[node name="OmniLight1" type="OmniLight3D" parent="." unique_id=939916737]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 5, -5)
-light_energy = 0.8
+light_energy = 3.441
 omni_range = 15.0
 
-[node name="OmniLight2" type="OmniLight3D" parent="."]
+[node name="OmniLight2" type="OmniLight3D" parent="." unique_id=521370069]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 5, 5)
-light_energy = 0.8
+light_energy = 3.751
 omni_range = 15.0
 
-[node name="OmniLight3" type="OmniLight3D" parent="."]
+[node name="OmniLight3" type="OmniLight3D" parent="." unique_id=807726576]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
 light_energy = 0.6
 omni_range = 12.0
 
-[node name="Floor" type="StaticBody3D" parent="."]
-collision_layer = 1
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1317148517]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
-mesh = SubResource("Main_FloorMesh")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1956394918]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.009022713, 0.0048890114, -0.003437519)
 material_override = SubResource("Main_FloorMat")
+mesh = SubResource("Main_FloorMesh")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
-shape = SubResource("Main_WallShape")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=974475293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0099487305, -0.19281006, -0.0028076172)
+shape = SubResource("BoxShape3D_0bbpv")
 
-[node name="WestWall" type="StaticBody3D" parent="."]
+[node name="WestWall" type="StaticBody3D" parent="." unique_id=1545106150]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 3.5, 0)
-collision_layer = 1
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="WestWall"]
-mesh = SubResource("Main_WallMesh")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WestWall" unique_id=1221000497]
 material_override = SubResource("Main_WallMat")
+mesh = SubResource("Main_WallMesh")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WestWall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WestWall" unique_id=1564091451]
 shape = SubResource("Main_WallShape")
 
-[node name="EastWall" type="StaticBody3D" parent="."]
+[node name="EastWall" type="StaticBody3D" parent="." unique_id=530898492]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3.5, 0)
-collision_layer = 1
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="EastWall"]
-mesh = SubResource("Main_WallMesh")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EastWall" unique_id=1339385421]
 material_override = SubResource("Main_WallMat")
+mesh = SubResource("Main_WallMesh")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="EastWall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EastWall" unique_id=1205536808]
 shape = SubResource("Main_WallShape")
 
-[node name="NorthWall" type="StaticBody3D" parent="."]
+[node name="NorthWall" type="StaticBody3D" parent="." unique_id=1567506399]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 9)
-collision_layer = 1
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NorthWall"]
-mesh = SubResource("Main_WallMesh")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NorthWall" unique_id=996272570]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 0)
 material_override = SubResource("Main_WallMat")
+mesh = SubResource("Main_WallMesh")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NorthWall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NorthWall" unique_id=2112078354]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 shape = SubResource("Main_WallShape")
 
-[node name="SouthWall" type="StaticBody3D" parent="."]
+[node name="SouthWall" type="StaticBody3D" parent="." unique_id=1731400093]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -9)
-collision_layer = 1
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="SouthWall"]
-mesh = SubResource("Main_WallMesh")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SouthWall" unique_id=1169495070]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 0)
 material_override = SubResource("Main_WallMat")
+mesh = SubResource("Main_WallMesh")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SouthWall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SouthWall" unique_id=289635664]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 shape = SubResource("Main_WallShape")
 
-[node name="Player" parent="." instance=ExtResource("2")]
+[node name="Player" parent="." unique_id=1888445051 instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.68, 0)
 
-[node name="Barricade" parent="." instance=ExtResource("3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 0.6, 0)
-
-[node name="HUD" type="Control" parent="."]
+[node name="HUD" type="Control" parent="." unique_id=522721540]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -143,50 +157,69 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4")
 
-[node name="HealthBar" type="ProgressBar" parent="HUD"]
-layout_mode = 0
+[node name="HealthContainer" type="Control" parent="HUD" unique_id=1968927755]
+anchors_preset = 0
 offset_left = 20.0
-offset_top = 20.0
-offset_right = 220.0
-offset_bottom = 40.0
+offset_top = 620.0
+offset_right = 300.0
+offset_bottom = 700.0
+
+[node name="HealthBar" type="ProgressBar" parent="HUD/HealthContainer" unique_id=1621156164]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 25.0
 value = 100.0
 show_percentage = false
 
-[node name="Points" type="Label" parent="HUD"]
+[node name="HealthIcon" type="Label" parent="HUD/HealthContainer" unique_id=1682399543]
 layout_mode = 0
-offset_left = 20.0
-offset_top = 50.0
-offset_right = 120.0
-offset_bottom = 80.0
-text = "000500"
-label_settings = SubResource("Main_LabelSettings")
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 25.0
+offset_bottom = 25.0
+text = "♥"
+label_settings = SubResource("Main_LabelSettings_Health")
 
-[node name="Ammo" type="Label" parent="HUD"]
+[node name="Points" type="Label" parent="HUD/HealthContainer" unique_id=8101844]
 layout_mode = 0
+offset_left = 1169.0
+offset_top = -86.0
+offset_right = 1252.0
+offset_bottom = -52.0
+text = "500"
+label_settings = SubResource("Main_LabelSettings_Points")
+
+[node name="AmmoContainer" type="Control" parent="HUD" unique_id=1304106738]
+anchors_preset = 0
 offset_left = 1080.0
 offset_top = 620.0
 offset_right = 1260.0
 offset_bottom = 700.0
+
+[node name="Ammo" type="Label" parent="HUD/AmmoContainer" unique_id=2041210309]
+layout_mode = 0
+offset_right = 180.0
+offset_bottom = 80.0
 text = "M1911
 8 / 40"
 label_settings = SubResource("Main_LabelSettings_Ammo")
 horizontal_alignment = 2
 
-[node name="StaminaUI" type="Control" parent="HUD"]
-layout_mode = 0
+[node name="StaminaUI" type="Control" parent="HUD" unique_id=1612762951]
+anchors_preset = 0
 offset_left = 540.0
 offset_top = 650.0
 offset_right = 740.0
 offset_bottom = 670.0
 
-[node name="StaminaBar" type="ProgressBar" parent="StaminaUI"]
+[node name="StaminaBar" type="ProgressBar" parent="HUD/StaminaUI" unique_id=189888614]
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 20.0
 value = 100.0
 show_percentage = false
 
-[node name="StaminaIcon" type="Label" parent="StaminaUI"]
+[node name="StaminaIcon" type="Label" parent="HUD/StaminaUI" unique_id=1384009869]
 layout_mode = 0
 offset_left = -25.0
 offset_top = -2.0
@@ -195,16 +228,50 @@ offset_bottom = 22.0
 text = "🏃"
 label_settings = SubResource("Main_LabelSettings_Icon")
 
-[node name="PauseMenu" type="Control" parent="HUD"]
+[node name="RoundDisplay" type="Label" parent="HUD" unique_id=1692665826]
+layout_mode = 0
+offset_left = 1100.0
+offset_top = 20.0
+offset_right = 1260.0
+offset_bottom = 60.0
+text = "01"
+label_settings = SubResource("Main_LabelSettings_Round")
+horizontal_alignment = 2
+
+[node name="LowAmmoLabel" type="Label" parent="HUD" unique_id=62434099]
 visible = false
-layout_mode = 3
+layout_mode = 0
+offset_left = 540.0
+offset_top = 580.0
+offset_right = 740.0
+offset_bottom = 620.0
+text = "LOW AMMO"
+label_settings = SubResource("Main_LabelSettings_LowAmmo")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NoAmmoLabel" type="Label" parent="HUD" unique_id=62434100]
+visible = false
+layout_mode = 0
+offset_left = 540.0
+offset_top = 580.0
+offset_right = 740.0
+offset_bottom = 620.0
+text = "NO AMMO"
+label_settings = SubResource("Main_LabelSettings_Warning")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PauseMenu" type="Control" parent="HUD" unique_id=607130822]
+visible = false
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="HUD/PauseMenu"]
+[node name="ColorRect" type="ColorRect" parent="HUD/PauseMenu" unique_id=1627669057]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -213,7 +280,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.7)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/PauseMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/PauseMenu" unique_id=2085490124]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -228,15 +295,15 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="ResumeButton" type="Button" parent="HUD/PauseMenu/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="HUD/PauseMenu/VBoxContainer" unique_id=1380572008]
 layout_mode = 2
 text = "RESUME"
 
-[node name="RestartButton" type="Button" parent="HUD/PauseMenu/VBoxContainer"]
+[node name="RestartButton" type="Button" parent="HUD/PauseMenu/VBoxContainer" unique_id=1041106952]
 layout_mode = 2
 text = "RESTART"
 
-[node name="ExitButton" type="Button" parent="HUD/PauseMenu/VBoxContainer"]
+[node name="ExitButton" type="Button" parent="HUD/PauseMenu/VBoxContainer" unique_id=1980529994]
 layout_mode = 2
 text = "EXIT TO MAIN MENU"
 

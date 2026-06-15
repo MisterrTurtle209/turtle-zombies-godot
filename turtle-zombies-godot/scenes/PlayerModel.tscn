@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://dm44s8bpmj8jy"]
+
+[ext_resource type="Script" uid="uid://c1gxb0jigve3m" path="res://scripts/PlayerModel.gd" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="ShirtMat"]
+albedo_color = Color(0.2, 0.4, 0.8, 1)
+
+[sub_resource type="BoxMesh" id="TorsoMesh"]
+size = Vector3(0.6, 0.8, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="SkinMat"]
+albedo_color = Color(0.96, 0.8, 0.69, 1)
+
+[sub_resource type="BoxMesh" id="HeadMesh"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="ArmMat"]
+albedo_color = Color(0.96, 0.8, 0.69, 1)
+
+[sub_resource type="BoxMesh" id="ArmMesh"]
+size = Vector3(0.2, 0.6, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="PantsMat"]
+albedo_color = Color(0.15, 0.15, 0.35, 1)
+
+[sub_resource type="BoxMesh" id="LegMesh"]
+size = Vector3(0.22, 0.7, 0.22)
+
+[node name="PlayerModel" type="Node3D" unique_id=1794303771]
+script = ExtResource("1")
+left_arm_position = Vector3(9.16, 0.9, 0)
+
+[node name="Torso" type="MeshInstance3D" parent="." unique_id=1928768184]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+material_override = SubResource("ShirtMat")
+mesh = SubResource("TorsoMesh")
+
+[node name="Head" type="MeshInstance3D" parent="." unique_id=698139082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+material_override = SubResource("SkinMat")
+mesh = SubResource("HeadMesh")
+
+[node name="LeftArm" type="MeshInstance3D" parent="." unique_id=987725692]
+transform = Transform3D(1, 0, 0, 0, 0.036748316, -0.99932456, 0, 0.99932456, 0.036748316, -0.4, 1.1344203, -0.24970171)
+material_override = SubResource("ArmMat")
+mesh = SubResource("ArmMesh")
+
+[node name="RightArm" type="MeshInstance3D" parent="." unique_id=1758272661]
+transform = Transform3D(0.8693138, 0.49419677, -0.007936029, 8.839807e-11, -0.016056368, -0.99987113, -0.4942605, 0.8692018, -0.013958026, 0.32865706, 1.2089423, -0.38128728)
+material_override = SubResource("ArmMat")
+mesh = SubResource("ArmMesh")
+
+[node name="LeftLeg" type="MeshInstance3D" parent="." unique_id=971057784]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.35, 0)
+material_override = SubResource("PantsMat")
+mesh = SubResource("LegMesh")
+
+[node name="RightLeg" type="MeshInstance3D" parent="." unique_id=477055006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.35, 0)
+material_override = SubResource("PantsMat")
+mesh = SubResource("LegMesh")
