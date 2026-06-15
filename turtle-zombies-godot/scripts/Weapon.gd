@@ -183,8 +183,8 @@ func _process(delta: float) -> void:
 		if recoil_pitch < 0:
 			recoil_pitch = 0
 	
-	# === WEAPON BOB & SWAY ===
-	_update_weapon_bob_and_sway(delta)
+	# === WEAPON BOB ===
+	_update_weapon_bob(delta)
 
 
 # =============================================================================
@@ -318,9 +318,9 @@ func reload() -> void:
 # =============================================================================
 # WEAPON BOB
 # =============================================================================
-# Look-based sway has been removed (it caused the weapon to fly around when turning the view).
+# Look-based sway has been removed entirely.
 # Only a slight, natural walking bob remains when the player is moving.
-func _update_weapon_bob_and_sway(delta: float):
+func _update_weapon_bob(delta: float):
 	if not main_camera:
 		return
 	
@@ -329,7 +329,11 @@ func _update_weapon_bob_and_sway(delta: float):
 	
 	var velocity = owning_player.velocity
 	var speed = velocity.length()
-	var is_moving = speed > 0.5 and owning_player.is_on_floor()
+	# Use speed only for "is_moving". 
+	# The is_on_floor() check was removed because this prototype has no gravity/jumping 
+	# (velocity.y is forced to 0 in Player), making is_on_floor() unreliable or always false.
+	# As long as the player has horizontal speed, we want the weapon to bob.
+	var is_moving = speed > 0.5
 	
 	# === WALKING BOB (slight bobbing when moving) ===
 	# All look-based sway (head turning drift / "flying around the screen") has been removed entirely.
