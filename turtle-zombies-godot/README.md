@@ -22,9 +22,9 @@
 ✅ FPS movement with sprint/crouch/stamina
 ✅ M1911 pistol with shooting, recoil, reload, ammo system
 ✅ View bobbing + sprint FOV increase
-✅ Breakable window barricade (6 planks + sandbags)
+- [ ] Breakable window barricade (6 planks + sandbags) — not yet implemented in the Godot port
 ✅ Pause menu with resume/restart
-✅ Health/points/ammo HUD
+✅ Health/points/ammo HUD (display only; health/damage/points not yet driven by gameplay)
 ✅ Clean square room map
 
 ## Next Steps (Future Development)

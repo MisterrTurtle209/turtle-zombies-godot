@@ -134,23 +134,22 @@ func _ready() -> void:
 	if has_slide:
 		if slide:
 			slide_original_y = slide.position.y
-			print("✅ Slide found at path: ", slide.get_path(), " | Original Y: ", slide_original_y)
 		else:
-			print("⚠️ has_slide = true but no Slide node found in scene!")
+			push_warning("Weapon has_slide = true but no Slide node found in scene!")
 	else:
-		print("ℹ️ This weapon has no slide (has_slide = false)")
+		# has_slide = false is intentional for some weapon types (see export)
+		pass
 	
 	# Find hammer pivot (only if this weapon has a hammer)
 	if has_hammer:
 		hammer_pivot = find_child("HammerPivot", true, false)
 		if hammer_pivot:
 			hammer_pivot.rotation_degrees.x = hammer_cocked_rotation
-			print("✅ HammerPivot found and set to cocked position")
 		else:
-			print("⚠️ has_hammer = true but no HammerPivot found in scene!")
+			push_warning("Weapon has_hammer = true but no HammerPivot node found in scene!")
 	else:
-		print("ℹ️ This weapon has no hammer (has_hammer = false)")
-	
+		# has_hammer = false is intentional for some weapon types
+		pass	
 	# Notify UI / other systems that this weapon is ready
 	emit_signal("ammo_changed", current_ammo, reserve_ammo, weapon_name)
 
