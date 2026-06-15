@@ -104,7 +104,8 @@ var original_weapon_rotation: Vector3 = Vector3.ZERO
 var main_camera: Camera3D = null
 
 var bob_time: float = 0.0
-var sway_offset: Vector2 = Vector2.ZERO
+# Note: look-based sway (head turning drift) has been removed entirely.
+# Only walking bob remains on the weapon (controlled by weapon_bob_* exports).
 
 # =============================================================================
 # SIGNALS (for future UI / GameManager integration)
@@ -240,8 +241,7 @@ func shoot() -> void:
 		main_camera.rotation.x += camera_recoil_up + side_kick
 		recoil_pitch = camera_recoil_up + side_kick
 		
-		# Reset sway when shooting so recoil doesn't fight with it
-		sway_offset = Vector2.ZERO
+		# (previous look-sway reset removed since sway has been taken out entirely)
 	
 	# === WEAPON VISUAL RECOIL ===
 	var kick_tween = create_tween()
@@ -316,8 +316,10 @@ func reload() -> void:
 
 
 # =============================================================================
-# WEAPON BOB & SWAY
+# WEAPON BOB
 # =============================================================================
+# Look-based sway has been removed (it caused the weapon to fly around when turning the view).
+# Only a slight, natural walking bob remains when the player is moving.
 func _update_weapon_bob_and_sway(delta: float):
 	if not main_camera:
 		return
@@ -329,49 +331,23 @@ func _update_weapon_bob_and_sway(delta: float):
 	var speed = velocity.length()
 	var is_moving = speed > 0.5 and owning_player.is_on_floor()
 	
-	# === BOBBING ===
+	# === WALKING BOB (slight bobbing when moving) ===
+	# All look-based sway (head turning drift / "flying around the screen") has been removed entirely.
+	# Only a subtle weapon bob tied to walking remains.
+	# This gives a natural slight up/down + side-to-side motion synced with footsteps,
+	# without affecting the weapon when standing still or turning the view.
+
 	var bob_offset = 0.0
+	var bob_side = 0.0
 	if is_moving:
 		bob_time += delta * weapon_bob_speed
-		bob_offset = sin(bob_time) * weapon_bob_amount * clamp(speed / 3.5, 0.3, 1.0)
-	
-	# === SWAY (revised for typical FPS behavior) ===
-	# The previous version applied look sway *only* as heavy rotation on the weapon node.
-	# Because the pistol model's origin is near the rear/grip, this made the barrel swing
-	# in an arc ("on a bearing") when pitching the camera up/down.
-	#
-	# Typical FPS sway uses:
-	#   - Primary *translational* offset (the whole gun drifts in your view as you look around).
-	#   - A much smaller amount of rotational "inertia/weight" for polish.
-	# This feels more natural and keeps the muzzle from pivoting unnaturally.
+		var bob_strength = clamp(speed / 3.5, 0.3, 1.0)
+		bob_offset = sin(bob_time) * weapon_bob_amount * bob_strength
+		bob_side   = cos(bob_time) * weapon_bob_amount * 0.4 * bob_strength   # small lateral component for more natural feel
 
-	var target_sway_x = -main_camera.rotation.x * weapon_sway_amount * 2.2   # Pitch (up/down)
-	var target_sway_y = -main_camera.rotation.y * weapon_sway_amount * 1.6   # Yaw (left/right)
-
-	# Lerp toward target (the "gun lags behind your view" inertia)
-	sway_offset.x = lerp(sway_offset.x, target_sway_x, delta * weapon_sway_speed)
-	sway_offset.y = lerp(sway_offset.y, target_sway_y, delta * weapon_sway_speed)
-
-	# --- Translational sway (main effect for natural FPS look) ---
-	# The weapon shifts in local space so it "floats" relative to the camera when you turn your head.
-	var look_sway_pos = Vector3(
-		sway_offset.y * 35.0,   # Horizontal drift from yaw
-		sway_offset.x * 28.0,   # Vertical drift from pitch
-		0.0
-	)
-
-	# --- Small rotational sway (adds "weight" without the hinge/pivot feel) ---
-	# Multipliers are deliberately much lower than the old *50/*45.
-	var look_sway_rot = Vector3(
-		sway_offset.x * 10.0,
-		sway_offset.y * 8.0,
-		0.0
-	)
-
-	# Apply (bob is vertical only; look sway is now mostly translation)
-	position = original_weapon_position + Vector3(0, bob_offset, 0) + look_sway_pos
-	rotation_degrees.x = original_weapon_rotation.x + look_sway_rot.x
-	rotation_degrees.y = original_weapon_rotation.y + look_sway_rot.y
+	# Apply bob to local position. No rotation bob to keep the weapon stable and pointing forward.
+	position = original_weapon_position + Vector3(bob_side, bob_offset, 0)
+	rotation_degrees = original_weapon_rotation   # keep weapon rotation clean (recoil handles its own)
 
 
 # =============================================================================
